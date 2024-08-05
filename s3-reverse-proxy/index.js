@@ -22,4 +22,4 @@ proxy.on("proxyReq", (proxyReq, req, res) => {
         proxyReq.path += "index.html"
 })
 
-app.listen(PORT, () => console.log(`App is listening on port ${PORT}`))
+app.listen(PORT, () => console.log(`Proxy is listening on port ${PORT}`))
