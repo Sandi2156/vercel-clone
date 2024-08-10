@@ -24,7 +24,6 @@ io.listen(9001, () => "Socket server is running on 9001");
 io.on("connection", (socket) => {
   socket.on("subscribe", (channel) => {
     socket.join(channel);
-    socket.emit("message", `Joined ${channel}`);
   });
 });
 
@@ -81,6 +80,13 @@ app.post("/project", async (req, res) => {
   });
 });
 
+app.get("/", (req, res) => {
+  return res.json({
+    app: "vercel clone",
+    version: "1.0.0",
+  });
+});
+
 async function initRedisSubscribe() {
   subscriber.psubscribe("logs:*");
   subscriber.on("pmessage", (pattern, channel, message) => {
@@ -90,4 +96,6 @@ async function initRedisSubscribe() {
 
 initRedisSubscribe();
 
-app.listen(PORT, () => console.log(`Api server is listening on port ${PORT}`));
+app.listen(process.env.PORT || PORT, () =>
+  console.log(`Api server is listening on port ${PORT}`)
+);
