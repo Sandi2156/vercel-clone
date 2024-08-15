@@ -16,6 +16,7 @@
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "ioredis": "^5.4.1",
+    "mongoose": "^8.5.3",
     "random-word-slugs": "^0.1.7",
     "socket.io": "^4.7.5"
   },

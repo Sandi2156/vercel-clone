@@ -7,7 +7,7 @@ async function deployProject(req: Request, res: Response) {
     req.body;
 
   if (!gitURL) {
-    res.status(403).json({
+    res.status(400).json({
       message: "GIT url is required.",
     });
   }
