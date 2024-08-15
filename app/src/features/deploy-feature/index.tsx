@@ -6,7 +6,7 @@ import { deployProject } from "./api/deploy-project";
 function DeployFeature() {
   const [url, setUrl] = useState("");
   const [socket] = useSocketConnection({
-    url: "https://vercel-api-server-d0e855b95552.herokuapp.com:9001",
+    url: import.meta.env.VITE_SERVER_ENDPOINT,
   });
   const [room, setRoom] = useState("");
   const [message, setMessage] = useState("");
