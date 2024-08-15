@@ -35,8 +35,19 @@ async function createSession(sessionId: string, userId: Types.ObjectId) {
   }
 }
 
+async function removeSession(sessionId: string) {
+  try {
+    await mongodb.connect();
+
+    await SessionModel.deleteOne({ sessionId });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export default {
   createSession,
   findSessionEntryForAUser,
   findUserForASessionId,
+  removeSession,
 };

@@ -26,7 +26,16 @@ async function findUserForASessionId(sessionId: string) {
   return await sessionRepository.findUserForASessionId(sessionId);
 }
 
+async function removeSession(sessionId: string) {
+  try {
+    await sessionRepository.removeSession(sessionId);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export default {
   createSession,
   findUserForASessionId,
+  removeSession,
 };

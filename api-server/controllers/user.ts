@@ -52,7 +52,23 @@ async function signIn(req: Request, res: Response) {
   });
 }
 
+async function signOut(req: Request, res: Response) {
+  const sessionId = req.cookies?.sessionId;
+
+  if (!sessionId)
+    return res.status(400).json({
+      message: "You are not logged in anyway",
+    });
+
+  await userService.signOut(sessionId);
+
+  return res.status(200).json({
+    message: "You are signed out",
+  });
+}
+
 export default {
   signUp,
   signIn,
+  signOut,
 };

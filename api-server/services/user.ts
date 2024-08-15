@@ -23,7 +23,16 @@ async function signIn(email: string, password: string) {
   };
 }
 
+async function signOut(sessionId: string) {
+  try {
+    await sessionService.removeSession(sessionId);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export default {
   signUp,
   signIn,
+  signOut,
 };

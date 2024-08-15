@@ -6,6 +6,7 @@ const userRouter = express.Router();
 
 userRouter
   .post("/signup", userController.signUp)
-  .post("/signin", userController.signIn);
+  .post("/signin", userController.signIn)
+  .post("/signout", userController.signOut);
 
 export default userRouter;
