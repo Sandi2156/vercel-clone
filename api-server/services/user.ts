@@ -14,11 +14,12 @@ async function signIn(email: string, password: string) {
       status: 404,
     };
 
-  await sessionService.createSession(user[0]._id);
+  const sessionId = await sessionService.createSession(user[0]._id);
 
   return {
     message: "user is logged in",
     status: 200,
+    sessionId,
   };
 }
 

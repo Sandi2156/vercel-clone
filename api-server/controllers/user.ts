@@ -39,7 +39,15 @@ async function signIn(req: Request, res: Response) {
 
   const response = await userService.signIn(email, password);
 
-  res.status(response.status).json({
+  if (response.status === 200)
+    return res
+      .cookie("sessionId", response.sessionId)
+      .status(response.status)
+      .json({
+        message: response.message,
+      });
+
+  return res.status(response.status).json({
     message: response.message,
   });
 }

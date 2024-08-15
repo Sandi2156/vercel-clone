@@ -7,7 +7,7 @@ async function createSession(userId: Types.ObjectId) {
   const sessionId = uuidv4();
 
   try {
-    const existingSession = await sessionRepository.findSessionEntryForAUserser(
+    const existingSession = await sessionRepository.findSessionEntryForAUser(
       userId
     );
 
@@ -22,6 +22,11 @@ async function createSession(userId: Types.ObjectId) {
   }
 }
 
+async function findUserForASessionId(sessionId: string) {
+  return await sessionRepository.findUserForASessionId(sessionId);
+}
+
 export default {
   createSession,
+  findUserForASessionId,
 };
