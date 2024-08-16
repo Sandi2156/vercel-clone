@@ -1,9 +1,12 @@
 import express from "express";
 
-import { deployProject } from "../controllers/project";
+import projectController from "../controllers/project";
 
 const projectRouter = express.Router();
 
-projectRouter.post("/", deployProject);
+projectRouter
+  .post("/", projectController.deployProject)
+  .post("/store", projectController.storeProject)
+  .get("/", projectController.getProjects);
 
 export default projectRouter;

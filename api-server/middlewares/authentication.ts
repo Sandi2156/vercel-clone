@@ -17,6 +17,8 @@ async function authMiddleware(req: Request, res: Response, next: NextFunction) {
       return res.status(401).json({
         message: "You are not authorized to access this resource",
       });
+
+    req.body.user = sessionEntry[0].userId;
   } catch (error) {
     return res.status(500).json({
       message: error,
