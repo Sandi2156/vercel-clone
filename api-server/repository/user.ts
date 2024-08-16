@@ -14,13 +14,12 @@ async function signUp(email: string, password: string) {
   }
 }
 
-async function signIn(email: string, password: string) {
+async function signIn(email: string) {
   try {
     await mongodb.connect();
 
     return await UserModel.find({
       email,
-      password,
     });
   } catch (error) {
     console.log(error);

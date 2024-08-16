@@ -6,7 +6,7 @@ async function authMiddleware(req: Request, res: Response, next: NextFunction) {
   const sessionId = req.cookies?.sessionId;
 
   if (!sessionId)
-    res.status(401).json({
+    return res.status(401).json({
       message: "You are not authorized to access this resource",
     });
 

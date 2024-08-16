@@ -1,17 +1,31 @@
 import userRepository from "../repository/user";
 import sessionService from "./session";
+import bcrypt from "../lib/bcrypt";
 
 async function signUp(email: string, password: string) {
-  await userRepository.signUp(email, password);
+  const hashedPassword = await bcrypt.getHashedPassword(password);
+
+  await userRepository.signUp(email, hashedPassword);
 }
 
 async function signIn(email: string, password: string) {
-  const user = await userRepository.signIn(email, password);
+  const user = await userRepository.signIn(email);
 
   if (!user || (user && !user.length))
     return {
       message: "user not found",
       status: 404,
+    };
+
+  const isPasswordMatched = await bcrypt.comparePassword(
+    password,
+    user[0].password
+  );
+
+  if (!isPasswordMatched)
+    return {
+      message: "password is not matched",
+      status: 400,
     };
 
   const sessionId = await sessionService.createSession(user[0]._id);
