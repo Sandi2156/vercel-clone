@@ -1,29 +1,17 @@
 import { Request, Response, NextFunction } from "express";
 
 import sessionService from "../services/session";
+import { AuthorizationError } from "../lib/exceptions";
 
 async function authMiddleware(req: Request, res: Response, next: NextFunction) {
   const sessionId = req.cookies?.sessionId;
 
-  if (!sessionId)
-    return res.status(401).json({
-      message: "You are not authorized to access this resource",
-    });
+  if (!sessionId) throw new AuthorizationError();
 
-  try {
-    const sessionEntry = await sessionService.findUserForASessionId(sessionId);
+  const sessionEntry = await sessionService.findUserForASessionId(sessionId);
+  if (!sessionEntry || !sessionEntry.length) throw new AuthorizationError();
 
-    if (!sessionEntry || !sessionEntry.length)
-      return res.status(401).json({
-        message: "You are not authorized to access this resource",
-      });
-
-    req.body.user = sessionEntry[0].userId;
-  } catch (error) {
-    return res.status(500).json({
-      message: error,
-    });
-  }
+  req.body.user = sessionEntry[0].userId;
 
   next();
 }

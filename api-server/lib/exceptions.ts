@@ -20,4 +20,14 @@ class ValidationError extends AppError {
   }
 }
 
-export { AppError, ValidationError };
+class AuthorizationError extends AppError {
+  constructor() {
+    super(
+      errorCodes.UNAUTHORIZED,
+      "You are not authorized to access this resource. Please sign in!",
+      401
+    );
+  }
+}
+
+export { AppError, ValidationError, AuthorizationError };
