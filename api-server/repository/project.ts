@@ -6,27 +6,19 @@ async function storeProject(
   projectLink: string,
   userId: string
 ) {
-  try {
-    await mongodb.connect();
+  await mongodb.connect();
 
-    await ProjectModel.create({
-      projectId,
-      projectLink,
-      userId,
-    });
-  } catch (error) {
-    console.log(error);
-  }
+  await ProjectModel.create({
+    projectId,
+    projectLink,
+    userId,
+  });
 }
 
 async function getProjectsByUserId(userId: string) {
-  try {
-    await mongodb.connect();
+  await mongodb.connect();
 
-    return await ProjectModel.find({ userId });
-  } catch (error) {
-    console.log(error);
-  }
+  return await ProjectModel.find({ userId });
 }
 
 export default {

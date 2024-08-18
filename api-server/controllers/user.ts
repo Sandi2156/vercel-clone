@@ -1,70 +1,54 @@
 import { Request, Response } from "express";
 
 import userService from "../services/user";
+import { AppError, ValidationError } from "../lib/exceptions";
+import errorCodes from "../constants/error_codes";
+import ApiResposne from "../lib/response";
 
 async function signUp(req: Request, res: Response) {
-  const email = req.body?.email.toLowerCase();
-  const password = req.body?.password;
+  const email = req.body.email?.toLowerCase();
+  const password = req.body.password;
 
-  if (!email)
-    res.status(400).json({
-      message: "email field is required",
-    });
+  if (!email) throw new ValidationError("Email field is required!");
 
-  if (!password)
-    res.status(400).json({
-      message: "password field is required",
-    });
+  if (!password) throw new ValidationError("Password field is required!");
 
   await userService.signUp(email, password);
 
-  res.status(201).json({
-    message: "user is created",
-  });
+  res.status(201).json(new ApiResposne(true, "User is created!").toDict());
 }
 
 async function signIn(req: Request, res: Response) {
   const email = req.body?.email;
   const password = req.body?.password;
 
-  if (!email)
-    res.status(400).json({
-      message: "email field is required",
-    });
+  if (!email) throw new ValidationError("Email field is required!");
 
-  if (!password)
-    res.status(400).json({
-      message: "password field is required",
-    });
+  if (!password) throw new ValidationError("Password field is required!");
 
-  const response = await userService.signIn(email, password);
+  const sessionId = await userService.signIn(email, password);
 
-  if (response.status === 200)
-    return res
-      .cookie("sessionId", response.sessionId)
-      .status(response.status)
-      .json({
-        message: response.message,
-      });
-
-  return res.status(response.status).json({
-    message: response.message,
-  });
+  return res
+    .cookie("sessionId", sessionId)
+    .status(200)
+    .json(new ApiResposne(true, "You are signed in successfully!").toDict());
 }
 
 async function signOut(req: Request, res: Response) {
   const sessionId = req.cookies?.sessionId;
 
   if (!sessionId)
-    return res.status(400).json({
-      message: "You are not logged in anyway",
-    });
+    throw new AppError(
+      errorCodes.BAD_REQUEST,
+      "You are not logged in anyway!",
+      400
+    );
 
   await userService.signOut(sessionId);
 
-  return res.status(200).json({
-    message: "You are signed out",
-  });
+  return res
+    .status(200)
+    .json(new ApiResposne(true, "You are signed out!").toDict());
 }
 
 export default {

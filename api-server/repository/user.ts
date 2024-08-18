@@ -1,29 +1,33 @@
 import mongodb from "../integrations/mongodb";
 import UserModel from "../models/user";
+import { AppError } from "../lib/exceptions";
+import errorCodes from "../constants/error_codes";
 
 async function signUp(email: string, password: string) {
-  try {
-    await mongodb.connect();
+  await mongodb.connect();
 
+  try {
     await UserModel.create({
       email,
       password,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    if (error.code === 11000)
+      throw new AppError(
+        errorCodes.DUPLICATE_RECORD,
+        "There is already an account with this email!",
+        400
+      );
+    else throw error;
   }
 }
 
 async function signIn(email: string) {
-  try {
-    await mongodb.connect();
+  await mongodb.connect();
 
-    return await UserModel.find({
-      email,
-    });
-  } catch (error) {
-    console.log(error);
-  }
+  return await UserModel.find({
+    email,
+  });
 }
 
 export default {

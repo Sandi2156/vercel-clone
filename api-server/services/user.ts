@@ -1,6 +1,7 @@
 import userRepository from "../repository/user";
 import sessionService from "./session";
 import bcrypt from "../lib/bcrypt";
+import { ValidationError } from "../lib/exceptions";
 
 async function signUp(email: string, password: string) {
   const hashedPassword = await bcrypt.getHashedPassword(password);
@@ -12,37 +13,22 @@ async function signIn(email: string, password: string) {
   const user = await userRepository.signIn(email);
 
   if (!user || (user && !user.length))
-    return {
-      message: "user not found",
-      status: 404,
-    };
+    throw new ValidationError("User not found!");
 
   const isPasswordMatched = await bcrypt.comparePassword(
     password,
     user[0].password
   );
 
-  if (!isPasswordMatched)
-    return {
-      message: "password is not matched",
-      status: 400,
-    };
+  if (!isPasswordMatched) throw new ValidationError("Password is wrong!");
 
   const sessionId = await sessionService.createSession(user[0]._id);
 
-  return {
-    message: "user is logged in",
-    status: 200,
-    sessionId,
-  };
+  return sessionId;
 }
 
 async function signOut(sessionId: string) {
-  try {
-    await sessionService.removeSession(sessionId);
-  } catch (error) {
-    console.log(error);
-  }
+  await sessionService.removeSession(sessionId);
 }
 
 export default {

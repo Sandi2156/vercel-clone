@@ -6,20 +6,16 @@ import { Types } from "mongoose";
 async function createSession(userId: Types.ObjectId) {
   const sessionId = uuidv4();
 
-  try {
-    const existingSession = await sessionRepository.findSessionEntryForAUser(
-      userId
-    );
+  const existingSession = await sessionRepository.findSessionEntryForAUser(
+    userId
+  );
 
-    if (existingSession && existingSession.length > 0)
-      return existingSession[0].sessionId;
+  if (existingSession && existingSession.length > 0)
+    return existingSession[0].sessionId;
 
-    await sessionRepository.createSession(sessionId, userId);
+  await sessionRepository.createSession(sessionId, userId);
 
-    return sessionId;
-  } catch (error) {
-    console.log(error);
-  }
+  return sessionId;
 }
 
 async function findUserForASessionId(sessionId: string) {
@@ -27,11 +23,7 @@ async function findUserForASessionId(sessionId: string) {
 }
 
 async function removeSession(sessionId: string) {
-  try {
-    await sessionRepository.removeSession(sessionId);
-  } catch (error) {
-    console.log(error);
-  }
+  await sessionRepository.removeSession(sessionId);
 }
 
 export default {
