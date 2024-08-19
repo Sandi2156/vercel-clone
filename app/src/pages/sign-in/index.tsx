@@ -1,10 +1,8 @@
-import * as React from "react";
+import { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -12,6 +10,10 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Alert from "@mui/material/Alert";
+import { useNavigate } from "react-router-dom";
+
+import { signIn } from "../../api/authenticate";
 
 function Copyright(props) {
   return (
@@ -35,14 +37,32 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
+type SignInResponse = {
+  success: boolean;
+  message: string;
+  data: null;
+  errorCode?: string;
+};
+
 export default function SignIn() {
-  const handleSubmit = (event) => {
+  const [isError, setIsError] = useState(false);
+  const [errorText, setErrorText] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+
+    const email = data.get("email") as string;
+    const password = data.get("password") as string;
+
+    const res: SignInResponse = await signIn(email, password);
+    console.log(res);
+
+    if (!res.success) {
+      setIsError(true);
+      setErrorText(res.message);
+    } else return navigate("/");
   };
 
   return (
@@ -89,10 +109,15 @@ export default function SignIn() {
               id="password"
               autoComplete="current-password"
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
-            />
+            /> */}
+            {isError && (
+              <Alert severity="error" style={{ margin: "10px" }}>
+                {errorText}
+              </Alert>
+            )}
             <Button
               type="submit"
               fullWidth
@@ -108,7 +133,7 @@ export default function SignIn() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/signup" variant="body2">
+                <Link href="/sign-up" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

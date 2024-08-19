@@ -3,19 +3,24 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import SignUp from "../pages/sign-up";
 import SignIn from "../pages/sign-in";
+import LandingPage from "../pages/landing-page";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <LandingPage />,
   },
   {
-    path: "/signup",
+    path: "/sign-up",
     element: <SignUp />,
   },
   {
-    path: "/signin",
+    path: "/sign-in",
     element: <SignIn />,
+  },
+  {
+    path: "/landing",
+    element: <LandingPage />,
   },
 ]);
 

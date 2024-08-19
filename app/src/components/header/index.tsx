@@ -1,15 +1,61 @@
-function Header() {
+import React from "react";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
+import { useState } from "react";
+
+const Header = ({ isLoggedIn, onLogout }) => {
+  const [value, setValue] = useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   return (
-    <div className="bg-primary h-12 flex align-middle">
-      <div className="flex justify-between flex-1 px-4">
-        <div className="w-15 self-center">Logo</div>
+    <AppBar position="static" color="primary">
+      <Toolbar>
+        {/* Left Section: Logo and Tabs */}
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Box
+            component="img"
+            src="#"
+            alt="Logo"
+            sx={{ height: 40, verticalAlign: "middle", marginRight: 2 }}
+          />
+          My Website
+        </Typography>
 
-        <div className="w-50 self-center">Menu</div>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          textColor="inherit"
+          indicatorColor="secondary"
+          sx={{ flexGrow: 1 }}
+        >
+          <Tab label="Home" />
+          <Tab label="About" />
+        </Tabs>
 
-        <div className="w-15 self-center"></div>
-      </div>
-    </div>
+        {/* Right Section: Auth Buttons */}
+        {isLoggedIn ? (
+          <Button color="inherit" onClick={onLogout}>
+            Logout
+          </Button>
+        ) : (
+          <>
+            <Button color="inherit">Login</Button>
+            <Button variant="outlined" color="inherit" sx={{ ml: 2 }}>
+              Sign Up
+            </Button>
+          </>
+        )}
+      </Toolbar>
+    </AppBar>
   );
-}
+};
 
 export default Header;

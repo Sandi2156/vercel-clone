@@ -1,24 +1,27 @@
+import axios, { AxiosRequestConfig, Method } from "axios";
+
 async function makeApiCall({
   method,
   url,
   body,
   headers = {},
 }: {
-  method: "POST" | "GET";
+  method: Method;
   url: string;
   body: object;
   headers?: object;
 }) {
-  const response = await fetch(url, {
-    method: method,
-    body: JSON.stringify(body),
-    headers: {
-      "Content-Type": "application/json",
-      ...headers,
-    },
-  });
+  const config: AxiosRequestConfig = {
+    url,
+    method,
+    data: JSON.stringify(body),
+    headers: { "Content-Type": "application/json", ...headers },
+    withCredentials: true,
+  };
 
-  return await response.json();
+  const response = await axios(config);
+
+  return response.data;
 }
 
 export default makeApiCall;
