@@ -12,6 +12,8 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
+import HomeIcon from "@mui/icons-material/Home";
+import Fab from "@mui/material/Fab";
 
 import { signUp } from "../../api/authenticate";
 
@@ -73,6 +75,24 @@ export default function SignUp() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
+      <Box
+        sx={{
+          "& > :not(style)": { m: 1 },
+          position: "absolute",
+          top: "10px",
+          left: "10px",
+        }}
+      >
+        <Fab
+          size="medium"
+          aria-label="add"
+          color="primary"
+          onClick={() => navigate("/")}
+        >
+          <HomeIcon />
+        </Fab>
+      </Box>
+
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
