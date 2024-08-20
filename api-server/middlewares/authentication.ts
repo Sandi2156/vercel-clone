@@ -13,7 +13,7 @@ async function authMiddleware(req: Request, res: Response, next: NextFunction) {
 
   req.body.user = sessionEntry[0].userId;
 
-  next();
+  return next();
 }
 
 export default authMiddleware;

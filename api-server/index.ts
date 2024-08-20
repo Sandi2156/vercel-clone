@@ -13,7 +13,12 @@ const app = express();
 const server = http.createServer(app);
 
 /* middlewares */
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.UI_ENDPOINT,
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(cookieParser());

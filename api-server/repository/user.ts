@@ -3,13 +3,20 @@ import UserModel from "../models/user";
 import { AppError } from "../lib/exceptions";
 import errorCodes from "../constants/error_codes";
 
-async function signUp(email: string, password: string) {
+async function signUp(
+  email: string,
+  password: string,
+  firstName: string,
+  lastName: string
+) {
   await mongodb.connect();
 
   try {
     await UserModel.create({
       email,
       password,
+      firstname: firstName,
+      lastname: lastName,
     });
   } catch (error: any) {
     if (error.code === 11000)

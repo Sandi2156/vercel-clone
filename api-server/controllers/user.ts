@@ -8,12 +8,13 @@ import ApiResposne from "../lib/response";
 async function signUp(req: Request, res: Response) {
   const email = req.body.email?.toLowerCase();
   const password = req.body.password;
+  const firstName = req.body?.firstName || "";
+  const lastName = req.body?.lastName || "";
 
   if (!email) throw new ValidationError("Email field is required!");
-
   if (!password) throw new ValidationError("Password field is required!");
 
-  await userService.signUp(email, password);
+  await userService.signUp(email, password, firstName, lastName);
 
   res.status(201).json(new ApiResposne(true, "User is created!").toDict());
 }
@@ -29,7 +30,11 @@ async function signIn(req: Request, res: Response) {
   const sessionId = await userService.signIn(email, password);
 
   return res
-    .cookie("sessionId", sessionId)
+    .cookie("sessionId", sessionId, {
+      secure: true,
+      httpOnly: true,
+      sameSite: "none",
+    })
     .status(200)
     .json(new ApiResposne(true, "You are signed in successfully!").toDict());
 }

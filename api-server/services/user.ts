@@ -3,10 +3,15 @@ import sessionService from "./session";
 import bcrypt from "../lib/bcrypt";
 import { ValidationError } from "../lib/exceptions";
 
-async function signUp(email: string, password: string) {
+async function signUp(
+  email: string,
+  password: string,
+  firstName: string,
+  lastName: string
+) {
   const hashedPassword = await bcrypt.getHashedPassword(password);
 
-  await userRepository.signUp(email, hashedPassword);
+  await userRepository.signUp(email, hashedPassword, firstName, lastName);
 }
 
 async function signIn(email: string, password: string) {
