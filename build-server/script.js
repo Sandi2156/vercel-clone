@@ -29,8 +29,8 @@ const s3_client = new S3Client({
   },
 });
 
-function publishLog(log) {
-  publisher.publish(`logs:${PROJECT_ID}`, JSON.stringify({ log }));
+function publishLog(log, code = "DEFAULT_LOG") {
+  publisher.publish(`logs:${PROJECT_ID}`, JSON.stringify({ log, code }));
 }
 
 async function setupS3Bucket() {
@@ -93,32 +93,32 @@ async function setupS3Bucket() {
 async function init() {
   const output_dir = path.join(__dirname, "output");
 
-  publishLog("Build Started");
+  publishLog("Build Started...", "BUILD_STARTED");
+  publishLog("Building Project...", "BUILDING");
   const p = exec(`cd ${output_dir} && npm install && npm run build`);
 
   p.stdout.on("data", function (data) {
-    publishLog(data.toString());
+    publishLog(data.toString(), "BUILD_DATA");
   });
 
   p.stdout.on("error", function (error) {
-    publishLog(error.toString());
+    publishLog(error.toString(), "ERROR");
     console.log(error.toString());
   });
 
   p.on("close", async function () {
-    publishLog("Build Completed");
+    publishLog("Build Completed...", "BUILD_COMPLETED");
 
     const websiteEndpoint = await setupS3Bucket();
 
     const build_dir = path.join(__dirname, "output", "dist");
     const build_dir_contents = fs.readdirSync(build_dir, { recursive: true });
 
-    publishLog("Deployment Started");
+    publishLog("Deployment Started...", "DEPLOYMENT_STARTED");
+    publishLog(`Deploying...`, "DEPLOYING");
     for (const file of build_dir_contents) {
       const file_path = path.join(build_dir, file);
       if (fs.lstatSync(file_path).isDirectory()) continue;
-
-      publishLog(`Uploading ${file_path}`);
 
       const command = new PutObjectCommand({
         Bucket: bucketName,
@@ -128,12 +128,10 @@ async function init() {
       });
 
       await s3_client.send(command);
-
-      publishLog(`Uploaded ${file_path}`);
     }
+    publishLog(`Deployed...`, "DEPLOYED");
 
-    publishLog("Done...");
-    publishLog(`Endpoint for your website is ${websiteEndpoint}`);
+    publishLog(`${websiteEndpoint}`, "PROJECT_ENDPOINT");
   });
 }
 
