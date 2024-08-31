@@ -3,6 +3,7 @@ import projectRouter from "./project";
 import userRouter from "./user";
 import authMiddleware from "../middlewares/authentication";
 import errorHandlerMiddleware from "../middlewares/error_handler";
+import tryCatch from "../lib/try_catch";
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ router.get("/", (req: Request, res: Response) => {
   });
 });
 
-router.use("/v1/project", authMiddleware, projectRouter);
+router.use("/v1/project", tryCatch(authMiddleware), projectRouter);
 router.use("/v1/user", userRouter);
 router.use(errorHandlerMiddleware);
 

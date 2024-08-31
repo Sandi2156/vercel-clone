@@ -9,6 +9,7 @@ type StoreProjectReqBody = {
   projectId: string;
   projectLink: string;
   user: any;
+  projectName: string;
 };
 
 async function deployProject(req: Request, res: Response) {
@@ -26,12 +27,19 @@ async function deployProject(req: Request, res: Response) {
 }
 
 async function storeProject(req: Request, res: Response) {
-  const { projectId, projectLink, user }: StoreProjectReqBody = req.body;
+  const { projectId, projectLink, projectName, user }: StoreProjectReqBody =
+    req.body;
 
   if (!projectId) throw new ValidationError("ProjectId is required!");
   if (!projectLink) throw new ValidationError("ProjectLink is required");
+  if (!projectName) throw new ValidationError("Project Name is required");
 
-  await projectService.storeProject(projectId, projectLink, user._id);
+  await projectService.storeProject(
+    projectId,
+    projectLink,
+    projectName,
+    user._id
+  );
 
   return res
     .status(201)

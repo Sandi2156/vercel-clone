@@ -15,6 +15,10 @@ const projectSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    projectName: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

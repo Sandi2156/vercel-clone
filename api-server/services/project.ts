@@ -20,9 +20,15 @@ async function deployProject(
 async function storeProject(
   projectId: string,
   projectLink: string,
+  projectName: string,
   userId: string
 ) {
-  await projectRepository.storeProject(projectId, projectLink, userId);
+  await projectRepository.storeProject(
+    projectId,
+    projectLink,
+    projectName,
+    userId
+  );
 }
 
 async function getProjectsByUserId(userId: string) {

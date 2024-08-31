@@ -4,6 +4,7 @@ import ProjectModel from "../models/project";
 async function storeProject(
   projectId: string,
   projectLink: string,
+  projectName: string,
   userId: string
 ) {
   await mongodb.connect();
@@ -12,6 +13,7 @@ async function storeProject(
     projectId,
     projectLink,
     userId,
+    projectName,
   });
 }
 
